@@ -107,11 +107,11 @@
 
 <script>
   const stations = [
-    { nr: 1, name: "Wall Balls",     target: 2000 },
-    { nr: 3, name: "KB Swings",      target: 4000 },
-    { nr: 5, name: "Barbell GTOH",   target: 6000 },
-    { nr: 7, name: "Power Cleans",   target: 8000 },
-    { nr: 9, name: "Deadlifts",      target: 10000 }
+    { nr: 1, name: "Wall Balls",     target: 2000,  exA: 6,  exB: 9 },
+    { nr: 3, name: "KB Swings",      target: 4000,  exA: 16, exB: 24 },
+    { nr: 5, name: "Barbell GTOH",   target: 6000,  exA: 40, exB: 60 },
+    { nr: 7, name: "Power Cleans",   target: 8000,  exA: 50, exB: 60 },
+    { nr: 9, name: "Deadlifts",      target: 10000, exA: 80, exB: 100 }
   ];
 
   const fmt = n => n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
@@ -125,11 +125,11 @@
       <div class="inputs">
         <div>
           <label for="a${i}">Partner A (kg pro Wdh.)</label>
-          <input type="number" id="a${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. 9">
+          <input type="number" id="a${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. ${s.exA}">
         </div>
         <div>
           <label for="b${i}">Partner B (kg pro Wdh.)</label>
-          <input type="number" id="b${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. 6">
+          <input type="number" id="b${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. ${s.exB}">
         </div>
       </div>
       <div class="results">
