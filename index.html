@@ -3,17 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Kalk – Team-Workout-Rechner</title>
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#000000">
+<title>Road to 55k</title>
 <style>
   :root {
-    --bg: #f5f6f8;
-    --card: #ffffff;
-    --text: #1d2330;
-    --muted: #6b7280;
-    --accent: #1f6feb;
-    --accent-soft: #e8f0fe;
-    --ok: #1a7f37;
-    --border: #d8dce3;
+    color-scheme: dark;
+    --bg: #000000;
+    --card: #141414;
+    --text: #e8ebf1;
+    --muted: #9aa3b2;
+    --accent: #5aa2ff;
+    --accent-soft: #1d2d48;
+    --ok: #3fb950;
+    --border: #2c2c2c;
+    --input-bg: #0a0a0a;
   }
   * { box-sizing: border-box; }
   body {
@@ -24,8 +28,9 @@
     padding: 16px;
   }
   main { max-width: 760px; margin: 0 auto; }
-  h1 { font-size: 1.5rem; margin: 8px 0 4px; }
-  .sub { color: var(--muted); margin: 0 0 20px; font-size: 0.95rem; }
+  .hero { display: block; width: 100%; max-width: 340px; height: auto; margin: 0 auto 4px; }
+  h1 { font-size: 1.5rem; margin: 8px 0 4px; padding: 0 17px; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: 0.95rem; padding: 0 17px; }
   .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -55,7 +60,7 @@
     padding: 10px;
     border: 1px solid var(--border);
     border-radius: 8px;
-    background: #fff;
+    background: var(--input-bg);
     color: var(--text);
   }
   input[type="number"]:focus { outline: 2px solid var(--accent); border-color: transparent; }
@@ -71,11 +76,11 @@
   .results .val { font-size: 1.25rem; font-weight: 700; }
   .results .lbl { font-size: 0.75rem; color: var(--muted); }
   .hint { font-size: 0.8rem; color: var(--muted); margin-top: 8px; min-height: 1em; }
-  .total { background: var(--text); color: #fff; border: none; }
+  .total { background: #243455; color: #fff; border: 1px solid #34487a; }
   .total .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
   .total .val { font-size: 1.3rem; font-weight: 700; }
   .total .lbl { font-size: 0.8rem; opacity: 0.75; }
-  .note { font-size: 0.85rem; color: var(--muted); }
+  .note { font-size: 0.85rem; color: var(--muted); padding: 0 17px; }
   @media (max-width: 420px) {
     .results .val { font-size: 1.05rem; }
   }
@@ -83,7 +88,8 @@
 </head>
 <body>
 <main>
-  <h1>Kalk</h1>
+  <img class="hero" src="header.png" alt="">
+  <h1>Road to 55k</h1>
   <p class="sub">Trage pro Station das Gewicht pro Wiederholung für Partner A und Partner B ein. Die App berechnet, wie viele Wiederholungen jeder machen muss, damit das Teamziel erreicht wird.</p>
 
   <div id="stations"></div>
