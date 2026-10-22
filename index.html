@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalk – Team-Workout-Rechner</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --card: #ffffff;
+    --text: #1d2330;
+    --muted: #6b7280;
+    --accent: #1f6feb;
+    --accent-soft: #e8f0fe;
+    --ok: #1a7f37;
+    --border: #d8dce3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 16px;
+  }
+  main { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 1.5rem; margin: 8px 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; font-size: 0.95rem; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .card h2 {
+    font-size: 1.05rem;
+    margin: 0 0 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .card h2 span { font-weight: 400; color: var(--muted); font-size: 0.9rem; }
+  .inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 12px 0;
+  }
+  label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 4px; }
+  input[type="number"] {
+    width: 100%;
+    font-size: 1.1rem;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--text);
+  }
+  input[type="number"]:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .results {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 10px;
+  }
+  .results div { text-align: center; }
+  .results .val { font-size: 1.25rem; font-weight: 700; }
+  .results .lbl { font-size: 0.75rem; color: var(--muted); }
+  .hint { font-size: 0.8rem; color: var(--muted); margin-top: 8px; min-height: 1em; }
+  .total { background: var(--text); color: #fff; border: none; }
+  .total .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+  .total .val { font-size: 1.3rem; font-weight: 700; }
+  .total .lbl { font-size: 0.8rem; opacity: 0.75; }
+  .note { font-size: 0.85rem; color: var(--muted); }
+  @media (max-width: 420px) {
+    .results .val { font-size: 1.05rem; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>Kalk</h1>
+  <p class="sub">Trage pro Station das Gewicht pro Wiederholung für Partner A und Partner B ein. Die App berechnet, wie viele Wiederholungen jeder machen muss, damit das Teamziel erreicht wird.</p>
+
+  <div id="stations"></div>
+
+  <div class="card total">
+    <h2 style="color:#fff">Gesamt (5 Stationen)</h2>
+    <div class="grid">
+      <div><div class="val" id="totTeamReps">–</div><div class="lbl">Wiederholungen Team</div></div>
+      <div><div class="val" id="totWeight">–</div><div class="lbl">bewegtes Gewicht (kg) von 30.000 kg</div></div>
+    </div>
+  </div>
+
+  <p class="note">Die Ergo-Stationen (Bike, Ski Erg, Rower, Echo Bike, Run mit je 5.000 m) können frei aufgeteilt werden und sind hier nicht enthalten.</p>
+</main>
+
+<script>
+  const stations = [
+    { nr: 1, name: "Wall Balls",     target: 2000 },
+    { nr: 3, name: "KB Swings",      target: 4000 },
+    { nr: 5, name: "Barbell GTOH",   target: 6000 },
+    { nr: 7, name: "Power Cleans",   target: 8000 },
+    { nr: 9, name: "Deadlifts",      target: 10000 }
+  ];
+
+  const fmt = n => n.toLocaleString("de-DE", { maximumFractionDigits: 1 });
+  const container = document.getElementById("stations");
+
+  stations.forEach((s, i) => {
+    const el = document.createElement("section");
+    el.className = "card";
+    el.innerHTML = `
+      <h2>${s.name} <span>Ziel: ${fmt(s.target)} kg</span></h2>
+      <div class="inputs">
+        <div>
+          <label for="a${i}">Partner A (kg pro Wdh.)</label>
+          <input type="number" id="a${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. 9">
+        </div>
+        <div>
+          <label for="b${i}">Partner B (kg pro Wdh.)</label>
+          <input type="number" id="b${i}" inputmode="decimal" min="0" step="0.5" placeholder="z. B. 6">
+        </div>
+      </div>
+      <div class="results">
+        <div><div class="val" id="each${i}">–</div><div class="lbl">Wdh. je Partner</div></div>
+        <div><div class="val" id="team${i}">–</div><div class="lbl">Wdh. Team</div></div>
+        <div><div class="val" id="moved${i}">–</div><div class="lbl">bewegt (kg)</div></div>
+      </div>
+      <div class="hint" id="hint${i}"></div>
+    `;
+    container.appendChild(el);
+    ["a", "b"].forEach(p => document.getElementById(p + i).addEventListener("input", calc));
+  });
+
+  function calc() {
+    let totReps = 0, totWeight = 0, any = false;
+
+    stations.forEach((s, i) => {
+      const a = parseFloat(document.getElementById("a" + i).value);
+      const b = parseFloat(document.getElementById("b" + i).value);
+      const each = document.getElementById("each" + i);
+      const team = document.getElementById("team" + i);
+      const moved = document.getElementById("moved" + i);
+      const hint = document.getElementById("hint" + i);
+
+      if (!(a > 0) || !(b > 0)) {
+        each.textContent = team.textContent = moved.textContent = "–";
+        hint.textContent = "";
+        return;
+      }
+
+      // Beide Partner machen gleich viele Wiederholungen, aufgerundet bis das Teamziel erreicht ist.
+      const reps = Math.ceil(s.target / (a + b));
+      const teamReps = reps * 2;
+      const weight = reps * (a + b);
+
+      each.textContent = reps;
+      team.textContent = teamReps;
+      moved.textContent = fmt(weight);
+      hint.textContent = `${fmt(weight - s.target)} kg über dem Ziel`;
+
+      totReps += teamReps;
+      totWeight += weight;
+      any = true;
+    });
+
+    document.getElementById("totTeamReps").textContent = any ? totReps : "–";
+    document.getElementById("totWeight").textContent = any ? fmt(totWeight) : "–";
+  }
+</script>
+</body>
+</html>
